@@ -1,0 +1,305 @@
+/* ============================================================
+   KAEN Performance Composite — global styles
+   Direction: "Carbon & Flame"  —  carbon black, ash stone,
+   bone text, restrained molten ember (炎). Engineering data
+   typography. Stroboscopic swing-arc signature.
+   ============================================================ */
+
+:root {
+  --carbon: #0c0d0f;
+  --graphite: #16181c;
+  --steelplate: #1f2228;
+  --ash: #e8e7e3;
+  --bone: #f5f5f2;
+  --steel: #8a8d93;
+  --ember: #ff4d17;
+  --ember-hot: #ff8a3d;
+  --ember-deep: #c81e07;
+  --hairline: rgba(245, 245, 242, 0.1);
+  --hairline-dark: rgba(12, 13, 15, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--carbon);
+  color: var(--bone);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--ember);
+  color: #fff;
+}
+
+/* ---- scrollbar ---- */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--carbon);
+}
+::-webkit-scrollbar-thumb {
+  background: #2c2f36;
+  border: 3px solid var(--carbon);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ember-deep);
+}
+
+/* ---- typographic primitives ---- */
+.font-display {
+  font-family: 'Archivo Expanded', 'Archivo', sans-serif;
+}
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.display-hero {
+  font-family: 'Archivo Expanded', 'Archivo', sans-serif;
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+.ember-text {
+  background: linear-gradient(100deg, var(--ember-hot), var(--ember) 45%, var(--ember-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- material textures ---- */
+/* fine film grain, used as a low-opacity overlay for depth */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* woven carbon-fibre twill, subtle, for dark elevated panels */
+.carbon-weave {
+  background-color: #101216;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.022) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.022) 0 2px, transparent 2px 6px),
+    radial-gradient(140% 120% at 50% 0%, rgba(255, 255, 255, 0.04), transparent 60%);
+}
+
+.hairline-grid {
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* molten heat-bloom backdrop, used very sparingly behind CTAs */
+.ember-bloom {
+  background:
+    radial-gradient(60% 90% at 18% 120%, rgba(255, 77, 23, 0.35), transparent 60%),
+    radial-gradient(50% 80% at 90% -10%, rgba(200, 30, 7, 0.28), transparent 55%);
+}
+
+/* ---- swing-arc signature: ember ignites along strobe spokes ---- */
+.swing-spoke {
+  stroke: rgba(245, 245, 242, 0.16);
+  stroke-width: 1;
+  transform-origin: var(--cx) var(--cy);
+  animation: spoke-ignite 5.5s ease-in-out infinite;
+}
+@keyframes spoke-ignite {
+  0%,
+  72%,
+  100% {
+    stroke: rgba(245, 245, 242, 0.14);
+  }
+  82% {
+    stroke: var(--ember);
+  }
+}
+
+/* ---- featured marquee ---- */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- reveal on enter ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- inputs ---- */
+.field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--hairline);
+  color: var(--bone);
+  padding: 0.85rem 1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem;
+  border-radius: 2px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.field::placeholder {
+  color: #5d616a;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--ember);
+  background: rgba(255, 255, 255, 0.05);
+}
+.field-light {
+  background: #fff;
+  border: 1px solid rgba(12, 13, 15, 0.16);
+  color: var(--carbon);
+}
+.field-light::placeholder {
+  color: #9a9a96;
+}
+.field-light:focus {
+  border-color: var(--ember);
+  background: #fff;
+}
+
+/* ---- buttons ---- */
+.btn-ember {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(180deg, var(--ember), var(--ember-deep));
+  color: #fff;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.9rem 1.6rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 0 14px 34px -16px rgba(255, 77, 23, 0.7);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, filter 0.25s;
+}
+.btn-ember:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px -16px rgba(255, 77, 23, 0.8);
+  filter: saturate(1.1);
+}
+.btn-ember:active {
+  transform: translateY(0);
+}
+.btn-ember:focus-visible {
+  outline: 2px solid var(--ember-hot);
+  outline-offset: 3px;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  color: var(--bone);
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s;
+}
+.btn-ghost:hover {
+  border-color: var(--bone);
+  transform: translateY(-2px);
+}
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+
+/* link underline sweep */
+.link-sweep {
+  position: relative;
+}
+.link-sweep::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 1px;
+  width: 100%;
+  background: var(--ember);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-sweep:hover::after,
+.link-sweep[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* spec table */
+.spec-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--hairline);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

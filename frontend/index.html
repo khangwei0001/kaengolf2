@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/avif" href="/kaen_logo.avif" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="KAEN Performance Composite — premium carbon-fiber golf shafts engineered in Tokyo. High Density Carbon, Active Torque Technology, Hybrid Carbon Layering."
+    />
+    <title>KAEN Performance Composite — Carbon Golf Shafts</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@500;600;700;800&family=Archivo:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              carbon: '#0C0D0F',
+              graphite: '#16181C',
+              steelplate: '#1F2228',
+              ash: '#E8E7E3',
+              bone: '#F5F5F2',
+              steel: '#8A8D93',
+              ember: {
+                DEFAULT: '#FF4D17',
+                hot: '#FF8A3D',
+                deep: '#C81E07',
+              },
+            },
+            fontFamily: {
+              display: ['"Archivo Expanded"', '"Archivo"', 'system-ui', 'sans-serif'],
+              sans: ['"Manrope"', 'system-ui', 'sans-serif'],
+              mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+            },
+            letterSpacing: {
+              tightest: '-0.04em',
+              tighter: '-0.03em',
+            },
+            boxShadow: {
+              float: '0 24px 60px -20px rgba(0,0,0,0.55), 0 8px 20px -12px rgba(0,0,0,0.4)',
+              ember: '0 18px 50px -16px rgba(255,77,23,0.45)',
+              card: '0 16px 40px -24px rgba(12,13,15,0.45)',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
