@@ -14,6 +14,8 @@ interface SwingArcProps {
   className?: string;
   /** animate the ember ignition */
   animate?: boolean;
+  /** let the whole fan sway gently, like an unhurried swing */
+  breathe?: boolean;
 }
 
 export default function SwingArc({
@@ -22,6 +24,7 @@ export default function SwingArc({
   rotate = -10,
   className = '',
   animate = true,
+  breathe = false,
 }: SwingArcProps) {
   const cx = 200;
   const cy = 200;
@@ -39,7 +42,7 @@ export default function SwingArc({
   return (
     <svg
       viewBox="0 0 400 400"
-      className={className}
+      className={`${animate && breathe ? 'swing-fan ' : ''}${className}`}
       role="img"
       aria-label="Stroboscopic golf swing arc"
       style={{ ['--cx' as string]: cx, ['--cy' as string]: cy }}
@@ -58,7 +61,13 @@ export default function SwingArc({
           <circle cx={s.x2} cy={s.y2} r={2.2} fill="rgba(245,245,242,0.34)" />
         </g>
       ))}
-      <circle cx={cx} cy={cy} r={4.5} fill="#FF4D17" />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={4.5}
+        fill="#FF4D17"
+        className={animate ? 'swing-pivot' : undefined}
+      />
     </svg>
   );
 }

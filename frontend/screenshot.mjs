@@ -61,6 +61,6 @@ async function takeScreenshot(url, label = '') {
   }
 }
 
-const url = process.argv[2] || 'http://localhost:3000';
+const url = process.argv[2] || 'http://kaen.157.245.202.230.sslip.io/shop';
 const label = process.argv[3] || '';
 takeScreenshot(url, label);

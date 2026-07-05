@@ -1,43 +1,62 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
 import {
-  PRODUCTS,
   CATEGORIES,
   CATEGORY_LABEL,
   money,
   type Product,
   type CategoryKey,
 } from '../data/products';
+import { fetchProducts } from '../lib/medusa';
+import { productPath } from '../lib/seo';
 import { useCart } from '../store/CartContext';
 import { useReveal } from '../hooks/useReveal';
+import { useI18n } from '../i18n/LanguageContext';
+import Embers from '../components/Embers';
 
 export default function Shop() {
+  const { t } = useI18n();
   const [filter, setFilter] = useState<CategoryKey | 'all'>('all');
   const [selected, setSelected] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const { add } = useCart();
 
+  // Load this brand's live catalogue from the backend Store API.
+  useEffect(() => {
+    fetchProducts().then(setProducts).catch(() => setProducts([]));
+  }, []);
+
   const visible = useMemo(
-    () => (filter === 'all' ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter)),
-    [filter],
+    () => (filter === 'all' ? products : products.filter((p) => p.category === filter)),
+    [filter, products],
   );
 
-  useReveal([filter]);
+  useReveal([filter, products]);
 
   return (
     <div className="bg-carbon">
       {/* hero */}
       <section className="relative pt-[72px] grain overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/background/background3.avif" alt="" className="w-full h-full object-cover opacity-30" />
+        <div className="absolute inset-0 overflow-hidden">
+          <img src="/background/background3.avif" alt="" className="ken-burns w-full h-full object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-t from-carbon via-carbon/85 to-carbon/60" />
         </div>
+        <Embers count={12} className="opacity-70" />
         <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 py-20 sm:py-28">
-          <p className="eyebrow text-ember-hot mb-5">The Shop · {PRODUCTS.length} shafts</p>
-          <h1 className="display-hero text-bone text-[clamp(2.6rem,8vw,6rem)] mb-5">
-            Find your shaft.
+          <p className="hero-anim eyebrow text-ember-hot mb-5" style={{ '--d': '0.05s' } as CSSProperties}>
+            {t.shop.eyebrow} · {products.length} {t.shop.shaftsWord}
+          </p>
+          <h1
+            className="hero-cast display-hero text-bone text-[clamp(2.6rem,8vw,6rem)] mb-5"
+            style={{ '--d': '0.15s' } as CSSProperties}
+          >
+            {t.shop.title}
           </h1>
-          <p className="text-bone/70 text-lg max-w-xl leading-relaxed">
-            One descending design, six profiles. Choose by club — then dial series, length, sleeve and
-            grip to your build.
+          <p
+            className="hero-anim text-bone/70 text-lg max-w-xl leading-relaxed"
+            style={{ '--d': '0.35s' } as CSSProperties}
+          >
+            {t.shop.intro}
           </p>
         </div>
       </section>
@@ -49,8 +68,8 @@ export default function Shop() {
             const active = filter === c.key;
             const count =
               c.key === 'all'
-                ? PRODUCTS.length
-                : PRODUCTS.filter((p) => p.category === c.key).length;
+                ? products.length
+                : products.filter((p) => p.category === c.key).length;
             return (
               <button
                 key={c.key}
@@ -96,21 +115,16 @@ function ProductCard({
   onOpen: () => void;
   onAdd: ReturnType<typeof useCart>['add'];
 }) {
+  const { t } = useI18n();
   const [added, setAdded] = useState(false);
 
   const quickAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onAdd({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      options: {
-        Series: product.series[0],
-        Length: product.lengths[0],
-        Sleeve: product.sleeves[0],
-        Grip: product.grips[0],
-      },
+    onAdd(product, {
+      Series: product.series[0],
+      Length: product.lengths[0],
+      Sleeve: product.sleeves[0],
+      Grip: product.grips[0],
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1400);
@@ -136,12 +150,12 @@ function ProductCard({
           {CATEGORY_LABEL[product.category]}
         </span>
         <div className="absolute top-3 right-3 flex gap-1.5">
-          {product.tech.map((t) => (
+          {product.tech.map((tech) => (
             <span
-              key={t}
+              key={tech}
               className="font-mono text-[0.58rem] text-ember-hot border border-ember/40 bg-carbon/50 px-1.5 py-0.5 rounded-sm"
             >
-              {t}
+              {tech}
             </span>
           ))}
         </div>
@@ -154,7 +168,7 @@ function ProductCard({
           }`}
           aria-label={`Quick add ${product.name} to cart`}
         >
-          {added ? '✓ Added' : '+ Add'}
+          {added ? t.shop.added : t.shop.add}
         </button>
       </div>
 
@@ -166,6 +180,13 @@ function ProductCard({
           <span className="font-mono text-bone text-sm shrink-0">{money(product.price)}</span>
         </div>
         <p className="text-steel text-sm mt-2 leading-snug line-clamp-2">{product.tagline}</p>
+        <Link
+          to={productPath(product)}
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex mt-4 text-[0.72rem] font-[Archivo] font-semibold uppercase tracking-[0.12em] text-ember-hot hover:text-bone transition-colors"
+        >
+          {t.shop.productDetails}
+        </Link>
       </div>
     </article>
   );
@@ -173,6 +194,7 @@ function ProductCard({
 
 /* --------------------------------------------------------- MODAL */
 function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
+  const { t, lp } = useI18n();
   const { add } = useCart();
   const [opts, setOpts] = useState<Record<string, string>>({
     Series: product.series[0],
@@ -192,11 +214,11 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
     };
   }, [onClose]);
 
-  const selects: { label: string; options: string[] }[] = [
-    { label: 'Series', options: product.series },
-    { label: 'Length', options: product.lengths },
-    { label: 'Sleeve', options: product.sleeves },
-    { label: 'Grip', options: product.grips },
+  const selects: { key: string; label: string; options: string[] }[] = [
+    { key: 'Series', label: t.shop.series, options: product.series },
+    { key: 'Length', label: t.shop.length, options: product.lengths },
+    { key: 'Sleeve', label: t.shop.sleeve, options: product.sleeves },
+    { key: 'Grip', label: t.shop.grip, options: product.grips },
   ];
 
   return (
@@ -240,15 +262,15 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             {/* options */}
             <div className="grid grid-cols-2 gap-4 mt-7">
               {selects.map((s) => (
-                <label key={s.label} className="block">
+                <label key={s.key} className="block">
                   <span className="eyebrow text-steel mb-2 block">
                     {s.label}
                     <span className="text-ember"> *</span>
                   </span>
                   <div className="relative">
                     <select
-                      value={opts[s.label]}
-                      onChange={(e) => setOpts((o) => ({ ...o, [s.label]: e.target.value }))}
+                      value={opts[s.key]}
+                      onChange={(e) => setOpts((o) => ({ ...o, [s.key]: e.target.value }))}
                       className="field appearance-none pr-9 cursor-pointer"
                     >
                       {s.options.map((o) => (
@@ -293,26 +315,17 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
               <button
                 className="btn-ember flex-1 justify-center"
                 onClick={() => {
-                  add(
-                    {
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.image,
-                      options: opts,
-                    },
-                    qty,
-                  );
+                  add(product, opts, qty);
                   onClose();
                 }}
               >
-                Add to bag — {money(product.price * qty)}
+                {t.shop.addToBag} — {money(product.price * qty)}
               </button>
             </div>
 
             {/* spec table */}
             <div className="mt-9">
-              <p className="eyebrow text-steel mb-3">Specifications</p>
+              <p className="eyebrow text-steel mb-3">{t.shop.specifications}</p>
               <div>
                 {product.specs.map((sp) => (
                   <div key={sp.label} className="spec-row">
@@ -322,11 +335,11 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 ))}
               </div>
               <p className="text-steel/60 text-xs mt-4 leading-relaxed">
-                Full specification chart available as a PDF on the{' '}
-                <a href="/faq" className="text-ember-hot hover:underline">
-                  FAQ page
-                </a>
-                . We recommend a professional fitter assemble or replace your shaft.
+                {t.shop.specNotePre}
+                <Link to={lp('/faq')} className="text-ember-hot hover:underline">
+                  {t.shop.specNoteLink}
+                </Link>
+                {t.shop.specNotePost}
               </p>
             </div>
           </div>

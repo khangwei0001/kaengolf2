@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { useReveal } from '../hooks/useReveal';
+import { useI18n } from '../i18n/LanguageContext';
 
 interface QA {
   q: string;
@@ -8,107 +9,94 @@ interface QA {
   image?: string;
 }
 
-const FAQS: QA[] = [
-  {
-    q: 'What are the features of KAEN shafts?',
-    a: (
-      <p>
-        The unique soft flex and torque-reducing shaft design makes it easy to hit high-trajectory
-        shots without losing energy. Try it and find out.
-      </p>
-    ),
-    image: '/faq/faq1.png',
-  },
-  {
-    q: 'How much tip cutting should I do?',
-    a: (
-      <p>
-        See the shaft trimming chart. Fine adjustment of specifications is possible by tip cutting. We
-        recommend asking a golf workshop, specialty store, or club manufacturer to assemble your club
-        or replace the shaft.
-      </p>
-    ),
-    image: '/faq/faq2.png',
-  },
-  {
-    q: 'Do you offer a warranty or money-back guarantee?',
-    a: (
-      <p>
-        If the shaft becomes damaged or unusable during normal play within one year of purchase,
-        return it to the manufacturer (KAEN Japan Co., Ltd.) via your place of purchase. After
-        inspection, confirmed manufacturing defects are exchanged for the same shaft. Damage from
-        transport, handling, or external factors — intentional or negligent — is not eligible. The
-        manufacturer does not provide money-back guarantees.
-      </p>
-    ),
-  },
-  {
-    q: 'Do you have any social media?',
-    a: (
-      <p>
-        Follow us on Instagram{' '}
-        <a href="https://www.instagram.com/kaengolf_jp/" target="_blank" rel="noreferrer" className="text-ember-hot hover:underline">
-          @kaengolf_jp
-        </a>{' '}
-        and Facebook{' '}
-        <a href="https://www.facebook.com/kaengolf" target="_blank" rel="noreferrer" className="text-ember-hot hover:underline">
-          KaenGolf
-        </a>
-        . Please follow along 🙂
-      </p>
-    ),
-  },
-  {
-    q: 'Can you handle KAEN products? (Wholesale)',
-    a: (
-      <p>
-        For wholesale enquiries, contact us at{' '}
-        <a href="tel:0676321676" className="text-ember-hot hover:underline">
-          TEL 06-7632-1676
-        </a>{' '}
-        or{' '}
-        <a href="mailto:info@kaengolf.jp" className="text-ember-hot hover:underline">
-          info@kaengolf.jp
-        </a>
-        .
-      </p>
-    ),
-  },
-  {
-    q: 'Where is the full specification table?',
-    a: (
-      <p>
-        The complete spec chart is large, so we host it as a PDF.{' '}
-        <a
-          href="https://c5b745e9-9246-447b-97f1-ef5d1e36fe98.usrfiles.com/ugd/4c5f1f_270df676eded45e2a4902c6c9d8200ec.pdf?dn=Specs%20.pdf"
-          target="_blank"
-          rel="noreferrer"
-          className="text-ember-hot hover:underline font-semibold"
-        >
-          Download Specs.pdf →
-        </a>
-      </p>
-    ),
-  },
-];
-
 export default function FAQ() {
+  const { t, lp } = useI18n();
   const [open, setOpen] = useState<number>(0);
   useReveal();
+
+  const FAQS: QA[] = [
+    {
+      q: t.faq.q1,
+      a: <p>{t.faq.a1}</p>,
+      image: '/faq/faq1.png',
+    },
+    {
+      q: t.faq.q2,
+      a: <p>{t.faq.a2}</p>,
+      image: '/faq/faq2.png',
+    },
+    {
+      q: t.faq.q3,
+      a: <p>{t.faq.a3}</p>,
+    },
+    {
+      q: t.faq.q4,
+      a: (
+        <p>
+          {t.faq.a4Pre}
+          <a href="https://www.instagram.com/kaengolf_jp/" target="_blank" rel="noreferrer" className="text-ember-hot hover:underline">
+            @kaengolf_jp
+          </a>
+          {t.faq.a4Mid}
+          <a href="https://www.facebook.com/kaengolf" target="_blank" rel="noreferrer" className="text-ember-hot hover:underline">
+            KaenGolf
+          </a>
+          {t.faq.a4Post}
+        </p>
+      ),
+    },
+    {
+      q: t.faq.q5,
+      a: (
+        <p>
+          {t.faq.a5Pre}
+          <a href="tel:0676321676" className="text-ember-hot hover:underline">
+            TEL 06-7632-1676
+          </a>
+          {t.faq.a5Mid}
+          <a href="mailto:info@kaengolf.jp" className="text-ember-hot hover:underline">
+            info@kaengolf.jp
+          </a>
+          {t.faq.a5Post}
+        </p>
+      ),
+    },
+    {
+      q: t.faq.q6,
+      a: (
+        <p>
+          {t.faq.a6Pre}
+          <a
+            href="https://c5b745e9-9246-447b-97f1-ef5d1e36fe98.usrfiles.com/ugd/4c5f1f_270df676eded45e2a4902c6c9d8200ec.pdf?dn=Specs%20.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="text-ember-hot hover:underline font-semibold"
+          >
+            {t.faq.a6Link}
+          </a>
+        </p>
+      ),
+    },
+  ];
 
   return (
     <div className="bg-carbon min-h-screen">
       <section className="relative pt-[72px] grain overflow-hidden">
-        <div className="absolute inset-0">
-          <img src="/background/background3.avif" alt="" className="w-full h-full object-cover opacity-25" />
+        <div className="absolute inset-0 overflow-hidden">
+          <img src="/background/background3.avif" alt="" className="ken-burns w-full h-full object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-t from-carbon via-carbon/85 to-carbon/60" />
         </div>
         <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 py-20 sm:py-24">
-          <p className="eyebrow text-ember-hot mb-5">Support</p>
-          <h1 className="display-hero text-bone text-[clamp(2.6rem,8vw,5.5rem)]">
-            Frequently asked
+          <p className="hero-anim eyebrow text-ember-hot mb-5" style={{ '--d': '0.05s' } as CSSProperties}>
+            {t.faq.eyebrow}
+          </p>
+          <h1
+            className="hero-cast display-hero text-bone text-[clamp(2.6rem,8vw,5.5rem)]"
+            style={{ '--d': '0.15s' } as CSSProperties}
+          >
+            {t.faq.title1}
             <br />
-            questions.
+            {t.faq.title2}
           </h1>
         </div>
       </section>
@@ -160,10 +148,10 @@ export default function FAQ() {
         </div>
 
         <div className="mt-14 carbon-weave border border-white/10 rounded-sm p-8 text-center">
-          <p className="text-bone/80 mb-1 font-[Archivo] font-semibold">Still have a question?</p>
-          <p className="text-steel text-sm mb-5">Our team is in Tokyo and happy to help.</p>
-          <Link to="/contact" className="btn-ember">
-            Contact us →
+          <p className="text-bone/80 mb-1 font-[Archivo] font-semibold">{t.faq.stillHave}</p>
+          <p className="text-steel text-sm mb-5">{t.faq.teamHelp}</p>
+          <Link to={lp('/contact')} className="btn-ember">
+            {t.faq.contactUs}
           </Link>
         </div>
       </section>

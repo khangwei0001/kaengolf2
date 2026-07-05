@@ -5,8 +5,18 @@ export interface Spec {
   value: string;
 }
 
+/** A concrete purchasable variant, needed to add a line item to the Medusa cart. */
+export interface ProductVariant {
+  id: string;
+  title?: string;
+  sku?: string;
+  /** Option title -> value, e.g. { Series: "Darkness 60", Length: '45.5"' }. */
+  options: Record<string, string>;
+}
+
 export interface Product {
   id: string;
+  handle?: string;
   name: string;
   category: CategoryKey;
   price: number;
@@ -22,6 +32,8 @@ export interface Product {
   specs: Spec[];
   /** technologies built into this shaft */
   tech: ('HDC' | 'ATT' | 'HCL')[];
+  sourceUrl?: string;
+  variants?: ProductVariant[];
 }
 
 export const CATEGORIES: { key: CategoryKey | 'all'; label: string }[] = [
@@ -304,4 +316,4 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export const money = (n: number) => '$' + n.toLocaleString('en-US');
+export const money = (n: number) => 'RM' + n.toLocaleString('en-US');

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../store/CartContext';
-
-const money = (n: number) => '$' + n.toLocaleString('en-US');
+import { useI18n } from '../i18n/LanguageContext';
+import { fmtMoney } from '../lib/checkoutApi';
 
 export default function CartDrawer() {
-  const { open, setOpen, lines, remove, setQty, subtotal, count } = useCart();
+  const { open, setOpen, lines, remove, setQty, subtotal, count, pending, error } = useCart();
+  const { t, lp } = useI18n();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
@@ -37,7 +38,7 @@ export default function CartDrawer() {
         <header className="flex items-center justify-between px-6 h-[72px] border-b border-white/10 shrink-0">
           <div className="flex items-baseline gap-3">
             <span className="font-display text-bone text-sm font-bold uppercase tracking-[0.16em]">
-              Your Bag
+              {t.cart.yourBag}
             </span>
             <span className="eyebrow text-steel">
               {count.toString().padStart(2, '0')}
@@ -46,7 +47,7 @@ export default function CartDrawer() {
           <button
             onClick={() => setOpen(false)}
             className="text-steel hover:text-bone transition-colors p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ember"
-            aria-label="Close cart"
+            aria-label={t.cart.close}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -58,13 +59,13 @@ export default function CartDrawer() {
           <div className="flex-1 grid place-items-center px-8 text-center">
             <div>
               <p className="font-display text-bone text-lg font-bold uppercase tracking-tight mb-2">
-                Your bag is empty
+                {t.cart.emptyTitle}
               </p>
               <p className="text-steel text-sm mb-6">
-                Every shaft is built to a single, descending design. Find the one that matches your swing.
+                {t.cart.emptyBody}
               </p>
-              <Link to="/shop" onClick={() => setOpen(false)} className="btn-ember">
-                Browse shafts
+              <Link to={lp('/shop')} onClick={() => setOpen(false)} className="btn-ember">
+                {t.cart.browseShafts}
               </Link>
             </div>
           </div>
@@ -72,7 +73,7 @@ export default function CartDrawer() {
           <>
             <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
               {lines.map((l) => (
-                <div key={l.id + JSON.stringify(l.options)} className="flex gap-4">
+                <div key={l.lineId} className="flex gap-4">
                   <div className="w-16 h-20 shrink-0 rounded-sm overflow-hidden bg-steelplate border border-white/10">
                     <img src={l.image} alt={l.name} className="w-full h-full object-cover" />
                   </div>
@@ -82,22 +83,22 @@ export default function CartDrawer() {
                         {l.name}
                       </p>
                       <button
-                        onClick={() => remove(l.id, l.options)}
+                        onClick={() => remove(l.lineId)}
                         className="text-steel hover:text-ember text-xs shrink-0"
                         aria-label={`Remove ${l.name}`}
                       >
-                        Remove
+                        {t.cart.remove}
                       </button>
                     </div>
-                    <p className="font-mono text-[0.68rem] text-steel mt-1 leading-relaxed">
-                      {Object.entries(l.options)
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join('  ·  ')}
-                    </p>
+                    {l.optionsText && (
+                      <p className="font-mono text-[0.68rem] text-steel mt-1 leading-relaxed">
+                        {l.optionsText}
+                      </p>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center border border-white/12 rounded-sm">
                         <button
-                          onClick={() => setQty(l.id, l.options, l.qty - 1)}
+                          onClick={() => setQty(l.lineId, l.qty - 1)}
                           className="w-7 h-7 grid place-items-center text-steel hover:text-bone"
                           aria-label="Decrease quantity"
                         >
@@ -105,14 +106,14 @@ export default function CartDrawer() {
                         </button>
                         <span className="w-7 text-center font-mono text-xs text-bone">{l.qty}</span>
                         <button
-                          onClick={() => setQty(l.id, l.options, l.qty + 1)}
+                          onClick={() => setQty(l.lineId, l.qty + 1)}
                           className="w-7 h-7 grid place-items-center text-steel hover:text-bone"
                           aria-label="Increase quantity"
                         >
                           +
                         </button>
                       </div>
-                      <span className="font-mono text-sm text-bone">{money(l.price * l.qty)}</span>
+                      <span className="font-mono text-sm text-bone">{fmtMoney(l.price * l.qty)}</span>
                     </div>
                   </div>
                 </div>
@@ -121,13 +122,20 @@ export default function CartDrawer() {
 
             <footer className="border-t border-white/10 px-6 py-5 shrink-0">
               <div className="flex items-center justify-between mb-1">
-                <span className="eyebrow text-steel">Subtotal</span>
-                <span className="font-display text-bone text-xl font-bold">{money(subtotal)}</span>
+                <span className="eyebrow text-steel">{t.cart.subtotal}</span>
+                <span className="font-display text-bone text-xl font-bold">{fmtMoney(subtotal)}</span>
               </div>
+              {error && <p className="text-ember-hot text-xs mb-2">{error}</p>}
               <p className="text-steel text-xs mb-4">
-                Shipping &amp; duties calculated at checkout.
+                {t.cart.shippingNote}
               </p>
-              <button className="btn-ember w-full justify-center">Proceed to checkout</button>
+              <Link
+                to={lp('/checkout')}
+                onClick={() => setOpen(false)}
+                className={`btn-ember w-full justify-center ${pending ? 'pointer-events-none opacity-60' : ''}`}
+              >
+                {t.cart.checkout}
+              </Link>
             </footer>
           </>
         )}

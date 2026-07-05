@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import SwingArc from './SwingArc';
+import { useI18n } from '../i18n/LanguageContext';
 
 const shafts = [
   'Darkness Shaft',
@@ -14,16 +15,19 @@ const shafts = [
   'Circle Wedge',
 ];
 
-const company = [
-  { label: 'Home', to: '/' },
-  { label: 'About Us', to: '/#about' },
-  { label: 'FAQ', to: '/faq' },
-  { label: 'Products', to: '/shop' },
-  { label: 'Contact', to: '/contact' },
-  { label: 'Shipping & Returns', to: '/faq' },
-];
-
 export default function Footer() {
+  const { t, lp } = useI18n();
+
+  const company = [
+    { label: t.footer.home, to: '/' },
+    { label: t.footer.aboutUs, to: '/#about' },
+    { label: t.footer.faq, to: '/faq' },
+    { label: t.footer.products, to: '/shop' },
+    { label: t.footer.contact, to: '/contact' },
+    { label: t.footer.shipping, to: '/shipping-returns' },
+    { label: t.footer.terms, to: '/terms-conditions' },
+  ];
+
   return (
     <footer className="relative carbon-weave grain border-t border-white/10 overflow-hidden">
       {/* faint signature arc bleeding from the corner */}
@@ -36,8 +40,7 @@ export default function Footer() {
           <div>
             <img src="/kaen_logo.avif" alt="KAEN Performance Composite" className="h-8 w-auto mb-5" />
             <p className="text-steel text-sm max-w-xs leading-relaxed">
-              A network of golf enthusiasts and industry professionals. The melting pot of the past,
-              present and future of the golf industry — engineered in Tokyo.
+              {t.footer.blurb}
             </p>
             <div className="mt-6 flex gap-3">
               <SocialLink href="https://www.facebook.com/kaengolf" label="Facebook">
@@ -63,12 +66,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="eyebrow text-steel mb-5">Company</h4>
+            <h4 className="eyebrow text-steel mb-5">{t.footer.company}</h4>
             <ul className="space-y-3">
               {company.map((c) => (
                 <li key={c.label}>
                   <Link
-                    to={c.to}
+                    to={lp(c.to)}
                     className="text-bone/85 hover:text-ember-hot text-sm transition-colors"
                   >
                     {c.label}
@@ -79,12 +82,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="eyebrow text-steel mb-5">Shaft Lineup</h4>
+            <h4 className="eyebrow text-steel mb-5">{t.footer.shaftLineup}</h4>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-3">
               {shafts.map((s) => (
                 <li key={s}>
                   <Link
-                    to="/shop"
+                    to={lp('/shop')}
                     className="text-bone/85 hover:text-ember-hot text-[0.8rem] transition-colors leading-snug block"
                   >
                     {s}
@@ -97,7 +100,7 @@ export default function Footer() {
 
         <div className="mt-14 pt-7 border-t border-white/10 grid gap-6 md:grid-cols-2 md:items-end">
           <div>
-            <h4 className="eyebrow text-steel mb-2">Our Location</h4>
+            <h4 className="eyebrow text-steel mb-2">{t.footer.ourLocation}</h4>
             <address className="not-italic text-bone/80 text-sm leading-relaxed max-w-sm">
               1-1-1 Minami Aoyama, Minato-ku
               <br />
@@ -112,7 +115,7 @@ export default function Footer() {
             <p className="eyebrow text-steel/70">
               © {new Date().getFullYear()} KAEN Performance Composite
             </p>
-            <p className="text-steel/60 text-xs mt-1">炎 — Designed to ignite your swing.</p>
+            <p className="text-steel/60 text-xs mt-1">{t.footer.signature}</p>
           </div>
         </div>
       </div>
