@@ -489,49 +489,6 @@ function WhyUs() {
   );
 }
 
-/* ------------------------------------------------------------------ TEAM */
-function Team() {
-  const { t, lp } = useI18n();
-  return (
-    <section className="bg-ash text-carbon py-24 sm:py-32">
-      <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
-          <div className="reveal">
-            <p className="eyebrow text-ember-deep mb-4">{t.home.teamEyebrow}</p>
-            <h2 className="font-display text-[clamp(2rem,4.5vw,3.4rem)] font-bold leading-[0.98] tracking-tightest">
-              {t.home.teamTitle1}
-              <br />
-              {t.home.teamTitle2}
-            </h2>
-          </div>
-          <Link to={lp('/contact')} className="btn-ember self-start md:self-auto">
-            {t.home.teamCta}
-            <Arrow />
-          </Link>
-        </div>
-
-        <div className="reveal-fade-group grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {TEAM.map((member, i) => (
-            <div
-              key={member}
-              className={`group relative overflow-hidden rounded-sm bg-steelplate ${
-                i % 2 === 0 ? 'lg:translate-y-4' : ''
-              }`}
-            >
-              <img
-                src={`/team/${member}.avif`}
-                alt="KAEN team member"
-                className="w-full aspect-[3/4] object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-ember/0 group-hover:bg-ember/10 transition-colors mix-blend-multiply" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ------------------------------------------------------------ NEWSLETTER */
 function Newsletter() {
   const { t } = useI18n();

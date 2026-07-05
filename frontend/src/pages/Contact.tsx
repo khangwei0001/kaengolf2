@@ -2,15 +2,6 @@ import { useState } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { useI18n } from '../i18n/LanguageContext';
 
-const TEAM = [
-  { img: 'team1', name: 'Aya Nakamura', role: 'Lead Shaft Engineer', loc: 'Tokyo' },
-  { img: 'team2', name: 'Marcus Bell', role: 'Master Club Fitter', loc: 'London' },
-  { img: 'team3', name: 'Mei Tanaka', role: 'Composite Designer', loc: 'Osaka' },
-  { img: 'team4', name: 'David Hollis', role: 'Tour & Player Liaison', loc: 'Phoenix' },
-  { img: 'team5', name: 'Liam Carter', role: 'Product Director', loc: 'Tokyo' },
-  { img: 'team6', name: 'Susan Greer', role: 'Operations & Care', loc: 'Tokyo' },
-] as const;
-
 export default function Contact() {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
