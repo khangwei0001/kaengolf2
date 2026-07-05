@@ -43,7 +43,7 @@ const pillarInfo = (t: Strings, key: (typeof PILLARS)[number]['key']) => {
   return { title: h.pillarFibreTitle, lead: h.pillarFibreLead, points: [h.pillarFibreP1, h.pillarFibreP2, h.pillarFibreP3] };
 };
 
-const TEAM = ['team1', 'team2', 'team3', 'team4', 'team5', 'team6'];
+// const TEAM = ['team1', 'team2', 'team3', 'team4', 'team5', 'team6'];
 
 export default function Home() {
   useReveal();
